@@ -1,17 +1,16 @@
-import { createContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import type { User } from "firebase/auth";
 import { onAuthStateChanged } from "firebase/auth";
 
 import { auth } from "../firebase/firebase";
-import type { AuthContextValue, AuthStatus, UserRole } from "../auth/authTypes";
+import type { AuthStatus, UserRole } from "../auth/authTypes";
 import { getUserRole, loginWithEmail, logoutUser } from "../auth/authService";
+import { AuthContext } from "./auth-context-value";
 
 interface Props {
   children: React.ReactNode;
 }
-
-export const AuthContext = createContext({} as AuthContextValue);
 
 export const AuthProvider = ({ children }: Props) => {
   const [user, setUser] = useState<User | null>(null);
@@ -25,7 +24,7 @@ export const AuthProvider = ({ children }: Props) => {
       await loginWithEmail(email, password);
       return true;
     } catch (error) {
-      console.error("Error al iniciar sesión:", error);
+      console.error("Error al iniciar sesion:", error);
       return false;
     }
   };
@@ -38,7 +37,7 @@ export const AuthProvider = ({ children }: Props) => {
       setRole(null);
       setAuthStatus("not-authenticated");
     } catch (error) {
-      console.error("Error al cerrar sesión:", error);
+      console.error("Error al cerrar sesion:", error);
     }
   };
 

@@ -26,8 +26,16 @@ export const actualizarPago = async (venta: Venta) => {
     const ventaData = ventaSnap.data();
     const cajaData = cajaSnap.data();
 
+    if (ventaData.isPaid) {
+      throw new Error("La venta ya fue marcada como pagada.");
+    }
+
     const totalVenta = Number(ventaData.total ?? venta.total ?? 0);
     const cajaActual = Number(cajaData.total ?? 0);
+
+    if (!Number.isFinite(totalVenta) || totalVenta <= 0) {
+      throw new Error("La venta no tiene un total valido.");
+    }
 
     transaction.update(ventaRef, {
       isPaid: true,

@@ -3,12 +3,10 @@ import { Outlet } from "react-router";
 
 export const AppLayout = () => {
   return (
-    <div className="min-h-screen bg-linear-to-b from-black  to-purple-600   text-zinc-100 ">
-      <div className="mx-auto px-4 py-6 sm:px-6 lg:px-8">
-        {/* Top bar */}
+    <div className="min-h-screen bg-[#080611] text-zinc-100">
+      <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,rgba(126,34,206,0.28),transparent_34%),linear-gradient(180deg,#080611_0%,#12091f_56%,#2f1452_100%)]">
         <CustomNavbar />
-        {/* Content */}
-        <main className="mx-auto max-w-5xl px-4 pt-20 sm:px-6 lg:px-8">
+        <main className="mx-auto max-w-6xl px-4 pb-10 pt-28 sm:px-6 lg:px-8">
           <Outlet />
         </main>
       </div>

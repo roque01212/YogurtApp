@@ -29,8 +29,6 @@ const formatearFecha = (fecha?: Date | null) => {
     day: "2-digit",
     month: "2-digit",
     year: "numeric",
-    // hour: "2-digit",
-    // minute: "2-digit",
   }).format(fecha);
 };
 
@@ -47,11 +45,10 @@ export const CustomTable = ({ ventas, onMarcarComoPagado }: Props) => {
     <Table>
       <TableHeader>
         <TableRow className="border-white/10 hover:bg-transparent">
-          <TableHead className="text-zinc-300 text-center">Producto</TableHead>
-          <TableHead className="text-zinc-300 text-center">Cantidad</TableHead>
-
-          <TableHead className="text-zinc-300 text-center">Total</TableHead>
-          <TableHead className="text-zinc-300 text-center">Fecha</TableHead>
+          <TableHead className="text-center text-zinc-300">Producto</TableHead>
+          <TableHead className="text-center text-zinc-300">Cantidad</TableHead>
+          <TableHead className="text-center text-zinc-300">Total</TableHead>
+          <TableHead className="text-center text-zinc-300">Fecha</TableHead>
           <TableHead className="text-right text-zinc-300">Acciones</TableHead>
         </TableRow>
       </TableHeader>
@@ -63,25 +60,25 @@ export const CustomTable = ({ ventas, onMarcarComoPagado }: Props) => {
           return (
             <TableRow
               key={venta.id}
-              className="border-white/10 hover:bg-white/5 "
+              className="border-white/10 hover:bg-white/5"
             >
-              <TableCell className="font-medium text-zinc-100 text-center ">
+              <TableCell className="text-center font-medium text-zinc-100">
                 {venta.product}
               </TableCell>
 
-              <TableCell className="text-zinc-300 text-center ">
+              <TableCell className="text-center text-zinc-300">
                 {venta.quantity}
               </TableCell>
 
-              <TableCell className="font-medium text-zinc-100 text-center  ">
+              <TableCell className="text-center font-medium text-zinc-100">
                 {formatearPrecio(total)}
               </TableCell>
 
-              <TableCell className="text-zinc-400 text-center">
+              <TableCell className="text-center text-zinc-400">
                 {formatearFecha(venta.createdAt)}
               </TableCell>
 
-              <TableCell className="text-right ">
+              <TableCell className="text-right">
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button
@@ -90,13 +87,13 @@ export const CustomTable = ({ ventas, onMarcarComoPagado }: Props) => {
                       className="size-8 text-zinc-300 hover:bg-white/10 hover:text-white"
                     >
                       <MoreHorizontalIcon className="size-4" />
-                      <span className="sr-only">Abrir menú</span>
+                      <span className="sr-only">Abrir menu</span>
                     </Button>
                   </DropdownMenuTrigger>
 
                   <DropdownMenuContent
                     align="end"
-                    className="bg-purple-500 hover:bg-purple-900 p-0 "
+                    className="border-white/10 bg-zinc-950 p-0"
                   >
                     <CustomAlert onConfirm={() => onMarcarComoPagado(venta)} />
                   </DropdownMenuContent>

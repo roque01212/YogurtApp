@@ -10,6 +10,20 @@ import type { Venta } from "../../interface/venta";
 export const registrarVenta = async (venta: Venta) => {
   const totalVenta = venta.quantity * venta.price;
 
+  if (!venta.product.trim()) {
+    throw new Error("El producto es obligatorio.");
+  }
+
+  if (
+    !Number.isFinite(venta.quantity) ||
+    !Number.isFinite(venta.price) ||
+    venta.quantity <= 0 ||
+    venta.price <= 0 ||
+    totalVenta <= 0
+  ) {
+    throw new Error("La cantidad y el precio deben ser mayores a cero.");
+  }
+
   const cajaRef = doc(db, "caja", "efectivo");
   const ventasRef = collection(db, "ventas");
 

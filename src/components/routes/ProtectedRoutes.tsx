@@ -1,4 +1,4 @@
-import { AuthContext } from "@/context/AuthContext";
+import { AuthContext } from "@/context/auth-context-value";
 import { use, type PropsWithChildren } from "react";
 import { Navigate } from "react-router";
 

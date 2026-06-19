@@ -7,6 +7,7 @@ import { Login } from "../pages/login/Login";
 import { DeudasPage } from "../pages/deudas/DeudasPage";
 import { StockPage } from "../pages/stock/StockPage";
 import { HistorialPage } from "../pages/historial/HistorialPage";
+import { RetirarCajaPage } from "../pages/caja/RetirarCajaPage";
 import {
   AuthenticatedRoute,
   NotAuthenticatedRoute,
@@ -61,6 +62,14 @@ export const appRouter = createBrowserRouter([
         element: (
           <AdminRoute>
             <DeudasPage />
+          </AdminRoute>
+        ),
+      },
+      {
+        path: "caja",
+        element: (
+          <AdminRoute>
+            <RetirarCajaPage />
           </AdminRoute>
         ),
       },

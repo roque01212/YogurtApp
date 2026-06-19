@@ -23,6 +23,8 @@ export const ComprasPage = () => {
   const [selectedProduct, setSelectedProduct] = useState<Producto["id"]>(
     productos[0].id,
   );
+  const [message, setMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   const {
     register,
@@ -32,54 +34,74 @@ export const ComprasPage = () => {
   } = useForm<Compra>({
     defaultValues: {
       nombrePersonalizado: "",
-      cantidad: 0,
-      precio: 0,
     },
   });
 
   const onSubmit = async (compraLike: Compra) => {
-    const productoSeleccionado = productos.find(
-      (p) => p.id === selectedProduct,
-    );
+    try {
+      setMessage("");
+      setErrorMessage("");
 
-    if (!productoSeleccionado) {
-      throw new Error("Producto inválido.");
+      const productoSeleccionado = productos.find(
+        (p) => p.id === selectedProduct,
+      );
+
+      if (!productoSeleccionado) {
+        throw new Error("Producto invalido.");
+      }
+
+      const nombreFinal =
+        selectedProduct === "otro"
+          ? (compraLike.nombrePersonalizado ?? "")
+          : productoSeleccionado.nombre;
+
+      const compraFinal: Compra = {
+        productId: selectedProduct,
+        producto: nombreFinal,
+        cantidad: compraLike.cantidad,
+        precio: compraLike.precio,
+      };
+
+      await registrarCompra(compraFinal);
+      setMessage("Compra registrada correctamente.");
+      reset();
+      setSelectedProduct("promo_21");
+    } catch (error) {
+      console.error(error);
+      setErrorMessage(
+        error instanceof Error
+          ? error.message
+          : "No se pudo registrar la compra.",
+      );
     }
-
-    const nombreFinal =
-      selectedProduct === "otro"
-        ? (compraLike.nombrePersonalizado ?? "")
-        : productoSeleccionado.nombre;
-
-    const compraFinal: Compra = {
-      productId: selectedProduct,
-      producto: nombreFinal,
-      cantidad: compraLike.cantidad,
-      precio: compraLike.precio,
-    };
-
-    await registrarCompra(compraFinal);
-    reset();
-    setSelectedProduct("promo_21");
   };
 
   return (
-    <div className="mx-auto w-full max-w-4xl p-4 py-6">
-      <h1 className="text-2xl text-white mb-6">Registrar Compra</h1>
+    <div className="mx-auto w-full max-w-4xl py-6">
+      <div className="mb-6">
+        <p className="text-sm font-semibold text-emerald-200">Compras</p>
+        <h1 className="text-2xl font-semibold tracking-tight text-white">
+          Registrar compra
+        </h1>
+        <p className="mt-1 text-sm text-zinc-400">
+          Carga leche, potes u otros insumos del negocio.
+        </p>
+      </div>
 
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="grid sm:grid-cols-3 gap-3"
+        className="grid gap-4 rounded-2xl border border-white/10 bg-white/5 p-5 shadow-sm sm:grid-cols-3"
       >
-        {/* SELECT PRODUCTO */}
         <div>
-          <label className="text-sm text-white">Producto</label>
+          <label className="mb-1 block text-xs font-semibold text-zinc-300">
+            Producto
+          </label>
           <select
             value={selectedProduct}
             onChange={(e) =>
               setSelectedProduct(e.target.value as Producto["id"])
             }
-            className="w-full rounded-xl border border-white/10 bg-purple-950 px-3 py-2 text-sm text-white outline-none focus:border-white/30"
+            className="min-h-11 w-full rounded-xl border border-white/10 bg-zinc-950/50 px-3 py-2 text-sm text-zinc-100 outline-none transition focus:border-emerald-300/60 focus:ring-2 focus:ring-emerald-300/20"
           >
             {productos.map((p) => (
               <option key={p.id} value={p.id}>
@@ -89,17 +111,15 @@ export const ComprasPage = () => {
           </select>
         </div>
 
-        {/* INPUT EXTRA SI ES "OTRO" */}
         {selectedProduct === "otro" && (
           <CustomInput
             {...register("nombrePersonalizado", { required: true })}
             label="Nombre del producto"
-            placeholder="Ej: Leche suelta, cucharas, etc"
+            placeholder="Ej: cucharas, bolsas, etiquetas"
             error={errors.nombrePersonalizado && "Este campo es obligatorio"}
           />
         )}
 
-        {/* CANTIDAD */}
         <CustomInput
           {...register("cantidad", {
             required: true,
@@ -108,26 +128,40 @@ export const ComprasPage = () => {
           })}
           label="Cantidad"
           type="number"
-          placeholder="0"
-          error={errors.cantidad && "Cantidad inválida"}
+          placeholder="Ej: 21"
+          error={errors.cantidad && "Cantidad invalida"}
         />
 
-        {/* PRECIO */}
         <CustomInput
           {...register("precio", {
             required: true,
             valueAsNumber: true,
             min: 1,
           })}
-          label="Precio pagado"
+          label="Precio unitario"
           type="number"
-          placeholder="0"
-          error={errors.precio && "Precio inválido"}
+          placeholder="Ej: 1200"
+          error={errors.precio && "Precio invalido"}
         />
 
-        <div className="sm:col-span-3 flex justify-center mt-4">
-          <CustomButton disabled={isSubmitting} type="submit">
-            {isSubmitting ? "Registrando..." : "Registrar Compra"}
+        {message && (
+          <p className="rounded-xl border border-emerald-400/30 bg-emerald-400/10 px-3 py-2 text-sm text-emerald-100 sm:col-span-3">
+            {message}
+          </p>
+        )}
+
+        {errorMessage && (
+          <p
+            className="rounded-xl border border-red-400/30 bg-red-500/10 px-3 py-2 text-sm text-red-200 sm:col-span-3"
+            role="alert"
+          >
+            {errorMessage}
+          </p>
+        )}
+
+        <div className="flex justify-end pt-2 sm:col-span-3">
+          <CustomButton disabled={isSubmitting} type="submit" variant="primary">
+            {isSubmitting ? "Registrando..." : "Registrar compra"}
           </CustomButton>
         </div>
       </form>

@@ -10,6 +10,17 @@ import { db } from "../../firebase/firebase";
 export const registrarCompra = async (compra: Compra) => {
   const totalCompra = compra.cantidad * compra.precio;
 
+  if (
+    !Number.isFinite(compra.cantidad) ||
+    !Number.isFinite(compra.precio) ||
+    compra.cantidad <= 0 ||
+    compra.precio <= 0 ||
+    !Number.isFinite(totalCompra) ||
+    totalCompra <= 0
+  ) {
+    throw new Error("El total de la compra debe ser mayor a cero.");
+  }
+
   const cajaRef = doc(db, "caja", "efectivo");
   const compraRef = collection(db, "compras");
   const stockLecheRef = doc(db, "stock", "leche");
@@ -26,8 +37,14 @@ export const registrarCompra = async (compra: Compra) => {
       throw new Error("No existe el documento stock/leche");
     }
 
-    const cajaActual = cajaSnap.data().total ?? 0;
+    const cajaActual = Number(cajaSnap.data().total ?? 0);
     const sachetsActuales = Number(stockLecheSnap.data().sachets ?? 0);
+
+    if (totalCompra > cajaActual) {
+      throw new Error(
+        `No hay suficiente dinero en caja. Disponible: $${cajaActual.toLocaleString("es-AR")}.`,
+      );
+    }
 
     const sachetsAgregados =
       compra.productId === "promo_21" ? compra.cantidad * 21 : 0;

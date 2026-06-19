@@ -19,21 +19,23 @@ export const CustomAlert = ({ onConfirm }: Props) => {
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <Button className="w-full bg-purple-500  ">Cobrar</Button>
+        <Button className="w-full justify-start bg-emerald-400/15 text-emerald-100 hover:bg-emerald-400/25">
+          Cobrar
+        </Button>
       </AlertDialogTrigger>
-      <AlertDialogContent className="bg-purple-900">
+      <AlertDialogContent className="border-white/10 bg-zinc-950 text-zinc-100">
         <AlertDialogHeader>
-          <AlertDialogTitle className="text-white">
-            Decea Marcar como Pagado?
-          </AlertDialogTitle>
+          <AlertDialogTitle>Marcar venta como pagada</AlertDialogTitle>
           <AlertDialogDescription className="text-zinc-400">
-            Esta acción no se puede deshacer. Esto marcará la venta como pagada
-            y actualizará el historial de ventas.
+            Esta accion suma el total a caja y quita la venta de deudas
+            pendientes.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction onClick={onConfirm}>Continue</AlertDialogAction>
+          <AlertDialogCancel>Cancelar</AlertDialogCancel>
+          <AlertDialogAction onClick={onConfirm}>
+            Confirmar cobro
+          </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

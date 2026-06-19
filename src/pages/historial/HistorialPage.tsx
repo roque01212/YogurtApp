@@ -26,7 +26,7 @@ const formatearFecha = (fecha?: Date | null) => {
   }).format(fecha);
 };
 
-type Tipos = "todos" | "venta" | "compra";
+type Tipos = "todos" | "venta" | "compra" | "retiro";
 
 export const HistorialPage = () => {
   const [movimientos, setMovimientos] = useState<Movimiento[]>([]);
@@ -83,7 +83,7 @@ export const HistorialPage = () => {
       return true;
     } catch (error) {
       console.error(error);
-      setError("No se pudieron cargar más movimientos.");
+      setError("No se pudieron cargar mas movimientos.");
       return false;
     } finally {
       setLoadingMore(false);
@@ -109,16 +109,6 @@ export const HistorialPage = () => {
     (currentPage - 1) * ITEMS_PER_PAGE,
     currentPage * ITEMS_PER_PAGE,
   );
-
-  const totalVentas = movimientos
-    .filter((movimiento) => movimiento.tipo === "venta")
-    .reduce((acc, movimiento) => acc + movimiento.total, 0);
-
-  const totalCompras = movimientos
-    .filter((movimiento) => movimiento.tipo === "compra")
-    .reduce((acc, movimiento) => acc + movimiento.total, 0);
-
-  const balance = totalVentas - totalCompras;
 
   const cambiarFiltro = (tipo: Tipos) => {
     setFiltroTipo(tipo);
@@ -152,7 +142,7 @@ export const HistorialPage = () => {
 
   if (loading) {
     return (
-      <section className="mx-auto w-full max-w-6xl px-4 py-6">
+      <section className="mx-auto w-full max-w-6xl py-6">
         <div className="rounded-2xl border border-white/10 bg-white/5 p-6">
           <p className="text-sm text-zinc-400">Cargando historial...</p>
         </div>
@@ -162,9 +152,9 @@ export const HistorialPage = () => {
 
   if (error) {
     return (
-      <section className="mx-auto w-full max-w-6xl px-4 py-6">
-        <div className="rounded-2xl border border-red-500/30 bg-red-500/10 p-5">
-          <p className="text-sm font-medium text-red-300">{error}</p>
+      <section className="mx-auto w-full max-w-6xl py-6">
+        <div className="rounded-2xl border border-red-400/30 bg-red-500/10 p-5">
+          <p className="text-sm font-medium text-red-200">{error}</p>
 
           <div className="mt-4">
             <CustomButton type="button" onClick={cargarMovimientos}>
@@ -177,46 +167,22 @@ export const HistorialPage = () => {
   }
 
   return (
-    <section className="mx-auto w-full max-w-6xl px-4 py-6">
-      <div className="mb-6 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+    <section className="mx-auto w-full max-w-6xl py-6">
+      <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight text-zinc-100">
-            Historial de movimientos
+          <p className="text-sm font-semibold text-emerald-200">Historial</p>
+          <h1 className="text-2xl font-semibold tracking-tight text-white">
+            Movimientos
           </h1>
           <p className="mt-1 text-sm text-zinc-400">
-            Consultá las ventas, compras y movimientos registrados.
+            Consulta ventas, compras y retiros registrados.
           </p>
         </div>
 
-        <div className="rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm text-zinc-300">
-          Movimientos cargados:{" "}
-          <span className="font-semibold text-white">{movimientos.length}</span>
-        </div>
-      </div>
-
-      <div className="mb-6 grid gap-3 sm:grid-cols-3">
-        <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-          <p className="text-sm text-zinc-400">Total ventas cargadas</p>
-          <p className="mt-1 text-xl font-semibold text-green-300">
-            {formatearPrecio(totalVentas)}
-          </p>
-        </div>
-
-        <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-          <p className="text-sm text-zinc-400">Total compras cargadas</p>
-          <p className="mt-1 text-xl font-semibold text-red-300">
-            {formatearPrecio(totalCompras)}
-          </p>
-        </div>
-
-        <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-          <p className="text-sm text-zinc-400">Balance cargado</p>
-          <p
-            className={`mt-1 text-xl font-semibold ${
-              balance >= 0 ? "text-green-300" : "text-red-300"
-            }`}
-          >
-            {formatearPrecio(balance)}
+        <div className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-zinc-300">
+          <p className="font-semibold text-white">Movimientos cargados</p>
+          <p className="text-2xl font-bold tracking-tight text-white">
+            {movimientos.length}
           </p>
         </div>
       </div>
@@ -225,9 +191,9 @@ export const HistorialPage = () => {
         <button
           type="button"
           onClick={() => cambiarFiltro("todos")}
-          className={`rounded-xl px-4 py-2 text-sm transition ${
+          className={`min-h-11 rounded-xl px-4 py-2 text-sm font-semibold transition ${
             filtroTipo === "todos"
-              ? "bg-white text-black"
+              ? "border border-white/20 bg-white/10 text-white"
               : "border border-white/10 bg-white/5 text-zinc-300 hover:bg-white/10"
           }`}
         >
@@ -237,9 +203,9 @@ export const HistorialPage = () => {
         <button
           type="button"
           onClick={() => cambiarFiltro("venta")}
-          className={`rounded-xl px-4 py-2 text-sm transition ${
+          className={`min-h-11 rounded-xl px-4 py-2 text-sm font-semibold transition ${
             filtroTipo === "venta"
-              ? "bg-green-400 text-black"
+              ? "bg-emerald-400/20 text-emerald-100"
               : "border border-white/10 bg-white/5 text-zinc-300 hover:bg-white/10"
           }`}
         >
@@ -249,23 +215,35 @@ export const HistorialPage = () => {
         <button
           type="button"
           onClick={() => cambiarFiltro("compra")}
-          className={`rounded-xl px-4 py-2 text-sm transition ${
+          className={`min-h-11 rounded-xl px-4 py-2 text-sm font-semibold transition ${
             filtroTipo === "compra"
-              ? "bg-red-400 text-black"
+              ? "bg-red-500/20 text-red-100"
               : "border border-white/10 bg-white/5 text-zinc-300 hover:bg-white/10"
           }`}
         >
           Compras
         </button>
+
+        <button
+          type="button"
+          onClick={() => cambiarFiltro("retiro")}
+          className={`min-h-11 rounded-xl px-4 py-2 text-sm font-semibold transition ${
+            filtroTipo === "retiro"
+              ? "bg-amber-400/20 text-amber-100"
+              : "border border-white/10 bg-white/5 text-zinc-300 hover:bg-white/10"
+          }`}
+        >
+          Retiros
+        </button>
       </div>
 
       {movimientosFiltrados.length === 0 ? (
         <div className="rounded-2xl border border-white/10 bg-white/5 p-8 text-center">
-          <h2 className="text-lg font-semibold text-zinc-100">
+          <h2 className="text-lg font-semibold text-white">
             No hay movimientos para mostrar
           </h2>
           <p className="mt-1 text-sm text-zinc-400">
-            Probá cambiando el filtro o registrá nuevas ventas y compras.
+            Proba cambiando el filtro o registra nuevas ventas y compras.
           </p>
         </div>
       ) : (
@@ -273,10 +251,10 @@ export const HistorialPage = () => {
           <div className="overflow-hidden rounded-2xl border border-white/10 bg-white/5">
             <div className="overflow-x-auto">
               <table className="w-full min-w-190 text-sm">
-                <thead className="border-b border-white/10">
+                <thead className="border-b border-white/10 bg-white/5">
                   <tr className="text-left text-zinc-300">
                     <th className="px-4 py-3 font-medium">Tipo</th>
-                    <th className="px-4 py-3 font-medium">Descripción</th>
+                    <th className="px-4 py-3 font-medium">Descripcion</th>
                     <th className="px-4 py-3 text-center font-medium">
                       Cantidad
                     </th>
@@ -298,11 +276,17 @@ export const HistorialPage = () => {
                         <span
                           className={`rounded-full px-3 py-1 text-xs font-semibold ${
                             movimiento.tipo === "venta"
-                              ? "border border-green-500/30 bg-green-500/10 text-green-300"
-                              : "border border-red-500/30 bg-red-500/10 text-red-300"
+                              ? "border border-emerald-400/30 bg-emerald-400/10 text-emerald-200"
+                              : movimiento.tipo === "retiro"
+                                ? "border border-amber-400/30 bg-amber-400/10 text-amber-200"
+                                : "border border-red-400/30 bg-red-500/10 text-red-200"
                           }`}
                         >
-                          {movimiento.tipo === "venta" ? "Venta" : "Compra"}
+                          {movimiento.tipo === "venta"
+                            ? "Venta"
+                            : movimiento.tipo === "retiro"
+                              ? "Retiro"
+                              : "Compra"}
                         </span>
                       </td>
 
@@ -311,7 +295,7 @@ export const HistorialPage = () => {
                       </td>
 
                       <td className="px-4 py-3 text-center text-zinc-300">
-                        {movimiento.cantidad}
+                        {movimiento.cantidad ?? "-"}
                       </td>
 
                       <td className="px-4 py-3 text-center font-medium text-zinc-100">
@@ -323,14 +307,18 @@ export const HistorialPage = () => {
                           <span
                             className={`rounded-full px-3 py-1 text-xs font-semibold ${
                               movimiento.isPaid
-                                ? "border border-green-500/30 bg-green-500/10 text-green-300"
-                                : "border border-yellow-500/30 bg-yellow-500/10 text-yellow-300"
+                                ? "border border-emerald-400/30 bg-emerald-400/10 text-emerald-200"
+                                : "border border-amber-400/30 bg-amber-400/10 text-amber-200"
                             }`}
                           >
                             {movimiento.isPaid ? "Pagado" : "Pendiente"}
                           </span>
+                        ) : movimiento.tipo === "retiro" ? (
+                          <span className="rounded-full border border-amber-400/30 bg-amber-400/10 px-3 py-1 text-xs font-semibold text-amber-200">
+                            Retirado
+                          </span>
                         ) : (
-                          <span className="rounded-full border border-zinc-500/30 bg-zinc-500/10 px-3 py-1 text-xs font-semibold text-zinc-300">
+                          <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-semibold text-zinc-300">
                             Pagado
                           </span>
                         )}
@@ -348,7 +336,7 @@ export const HistorialPage = () => {
 
           <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <p className="text-sm text-zinc-400">
-              Mostrando página {currentPage} con {movimientosPaginados.length}{" "}
+              Mostrando pagina {currentPage} con {movimientosPaginados.length}{" "}
               movimientos
             </p>
 
@@ -362,7 +350,7 @@ export const HistorialPage = () => {
               </CustomButton>
 
               <span className="text-sm text-zinc-300">
-                Página {currentPage}
+                Pagina {currentPage}
               </span>
 
               <CustomButton
@@ -377,7 +365,7 @@ export const HistorialPage = () => {
 
           {!hasMore && currentPage >= totalPages && (
             <p className="mt-4 text-center text-sm text-zinc-500">
-              No hay más movimientos para mostrar.
+              No hay mas movimientos para mostrar.
             </p>
           )}
         </>
