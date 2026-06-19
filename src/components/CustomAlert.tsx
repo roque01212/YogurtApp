@@ -32,7 +32,9 @@ export const CustomAlert = ({ onConfirm }: Props) => {
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>Cancelar</AlertDialogCancel>
+          <AlertDialogCancel className="bg-zinc-950">
+            Cancelar
+          </AlertDialogCancel>
           <AlertDialogAction onClick={onConfirm}>
             Confirmar cobro
           </AlertDialogAction>
