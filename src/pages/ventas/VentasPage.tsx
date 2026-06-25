@@ -17,6 +17,8 @@ export const VentasPage = () => {
   } = useForm<Venta>({
     defaultValues: {
       product: "",
+      quantity: 0,
+      price: 0,
       isPaid: false,
     },
   });
@@ -31,6 +33,8 @@ export const VentasPage = () => {
 
       reset({
         product: "",
+        quantity: 0,
+        price: 0,
         isPaid: false,
       });
     } catch (error) {
