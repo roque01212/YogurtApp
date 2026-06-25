@@ -75,24 +75,26 @@ export const VentasPage = () => {
             {...register("quantity", {
               required: true,
               valueAsNumber: true,
-              min: 1,
+              min: 0.1,
             })}
             label="Cantidad"
             placeholder="Cantidad vendida"
             type="number"
             error={errors.quantity && "La cantidad debe ser mayor a cero"}
+            step="any"
           />
 
           <CustomInput
             {...register("price", {
               required: true,
               valueAsNumber: true,
-              min: 1,
+              min: 0.1,
             })}
             label="Precio unitario"
             placeholder="Precio por unidad"
             type="number"
             error={errors.price && "El precio debe ser mayor a cero"}
+            step="any"
           />
 
           <div className="flex items-center justify-between rounded-xl border border-white/10 bg-zinc-950/40 p-3 sm:col-span-3">
@@ -130,7 +132,11 @@ export const VentasPage = () => {
           )}
 
           <div className="flex justify-end pt-2 sm:col-span-3">
-            <CustomButton type="submit" disabled={isSubmitting} variant="primary">
+            <CustomButton
+              type="submit"
+              disabled={isSubmitting}
+              variant="primary"
+            >
               {isSubmitting ? "Registrando..." : "Registrar venta"}
             </CustomButton>
           </div>
